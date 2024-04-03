@@ -1,11 +1,22 @@
 import readlinesync = require("readline-sync");
 
+import { ProdutoController } from "./src/controller/ProdutoController";
+import { Geladeira } from "./src/model/Geladeira";
+import { LavaRoupas } from "./src/model/LavaRoupas";
+
 export function main() {
 
-    let opcao: number;
+    let opcao, id, tipo, preco, litros, quilos: number;
+    let nome: string;
+    let tipoProduto = ['Geladeira', 'Lava Roupas'];
 
+    const produtoController: ProdutoController = new ProdutoController();
 
-    g1.geladeira(5,)
+    produtoController.cadastrar(new Geladeira(produtoController.gerarId(),
+        "Brastemp Inverse", 1, 3600, 475));
+
+    produtoController.cadastrar(new LavaRoupas(produtoController.gerarId(),
+        "Lavadora Eletrolux", 2, 1500, 13));
 
     while (true) {
 
@@ -36,27 +47,79 @@ export function main() {
 
         switch (opcao) {
             case 1:
-                console.log("\n\nCriar Produto\n\n");
+                console.log("\n\nListar todos os Produtos\n\n");
+
+                produtoController.listarTodosProdutos();
 
                 keyPress()
                 break;
             case 2:
-                console.log("\n\nListar todos os Produtos\n\n");
+                console.log("\n\nListar Produto pelo ID\n\n");
+
+                id = readlinesync.questionInt("Digite o Id do Produto: ");
+                produtoController.listarPorId(id);
 
                 keyPress()
                 break;
             case 3:
-                console.log("\n\nBuscar Produto por Id \n\n");
+                console.log("\n\nCadastrar Produto\n\n");
+
+                nome = readlinesync.question("Digite o Nome do Produto: ");
+
+                tipo = readlinesync.keyInSelect(tipoProduto, "", { cancel: false }) + 1;
+
+                preco = readlinesync.questionFloat("Digite o preco: ");
+
+                switch (tipo) {
+                    case 1:
+                        litros = readlinesync.questionInt("Digite quantos litros tem a geladeira: ");
+                        produtoController.cadastrar(new Geladeira(produtoController.gerarId(), nome, tipo, preco, litros));
+                        break;
+                    case 2:
+                        quilos = readlinesync.questionInt("Digite de quantos quilos a maquina é: ");
+                        produtoController.cadastrar(new LavaRoupas(produtoController.gerarId(), nome, tipo, preco, quilos));
+                        break;
+                }
 
                 keyPress()
                 break;
             case 4:
                 console.log("\n\nAtualizar Dados do Produto\n\n");
 
+                id = readlinesync.questionInt("Digite o Id do Produto: ");
+
+                let produto = produtoController.buscarNoArray(id);
+
+                if (produto !== null) {
+
+                    nome = readlinesync.question("Digite o Nome do Produto: ");
+
+                    tipo = produto.tipo;
+
+                    preco = readlinesync.questionFloat("Digite o preco: ");
+
+                    switch (tipo) {
+                        case 1:
+                            litros = readlinesync.questionInt("Digite quantos litros tem a geladeira: ");
+                            produtoController.atualizar(new Geladeira(id, nome, tipo, preco, litros));
+                            break;
+                        case 2:
+                            quilos = readlinesync.questionInt("Digite de quantos quilos a maquina é: ");
+                            produtoController.atualizar(new LavaRoupas(id, nome, tipo, preco, quilos));
+                            break;
+                    }
+
+                } else {
+                    console.log("Produto não Encontrado!");
+                }
+
                 keyPress()
                 break;
             case 5:
                 console.log("\n\nApagar Produto\n\n");
+
+                id = readlinesync.questionInt("Digite o Id do Produto: ");
+                produtoController.deletar(id);
 
                 keyPress()
                 break;
@@ -65,12 +128,13 @@ export function main() {
 
                 keyPress()
                 break;
+
+
         }
+
     }
 
 }
-
-
 
 export function sobre(): void {
     console.log("\n*****************************************************");

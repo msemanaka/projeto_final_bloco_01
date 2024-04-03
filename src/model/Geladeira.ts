@@ -5,11 +5,10 @@ export class Geladeira extends Produto {
     private _litros: number;
 
 
-    constructor(id: number, nome: string, tipo: number, preco: number, marca: string, litros: number) {
-        super(id, nome, tipo, preco, marca);
+    constructor(id: number, nome: string, tipo: number, preco: number, litros: number) {
+        super(id, nome, tipo, preco);
         this._litros = litros;
     }
-
 
 
 	public get litros(): number {

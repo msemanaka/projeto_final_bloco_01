@@ -4,6 +4,9 @@ export function main() {
 
     let opcao: number;
 
+
+    g1.geladeira(5,)
+
     while (true) {
 
         console.log("*****************************************************");
